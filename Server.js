@@ -12,6 +12,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+// var test = speakeasy.generateSecret({name: 'rncp'});
+// console.log(test);
 
 // Database connection
 const db = mysql.createConnection({
@@ -86,9 +88,9 @@ app.get('/me', verifyToken, (req, res) => {
 // Enable 2FA for a user
 app.post('/Enable2FA', verifyToken, (req, res) => {
     const secret = speakeasy.generateSecret({name: 'rncp'});
+    // console.log(secret);
     const url = speakeasy.otpauthURL({ secret: secret.base32, label: `SecureApp (${req.userId})`, algorithm: 'sha1' });
-
-    // console.log(qrcode.toDataURL(url));
+    // console.log(url);
 
     db.query('UPDATE users SET secret = ? WHERE id = ?', [secret.base32, req.userId], (err, result) => {
 
